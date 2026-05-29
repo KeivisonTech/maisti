@@ -248,5 +248,4 @@ while (opcao !== 0) {
             console.log("\n⚠️ Opção inválida! Tente novamente.");
             sistema.pausar();
             break;
-    }
-}
+    }}
