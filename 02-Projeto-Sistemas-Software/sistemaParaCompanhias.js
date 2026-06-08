@@ -20,8 +20,30 @@ class Sistema {
     constructor() {
         this.companhias = [];
         this.trechos = [];
-        this.nextCompanhiaId = 1;
-        this.nextTrechoId = 1;
+    }
+carregar(){
+    if(!fs.existsSync("package.json")){
+        return ;}
+        else{
+            const conteudo = fs.readFileSync()
+            dados = JSON.parse (conteudo)
+            this.companhias = dados.companhias
+            this.trechos = dados.trechos
+        }
+    }
+
+
+    salvar() {
+             dados = { companhias: this.companhias,
+            trechos: this.trechos
+        };
+        objeto = JSON.stringify(dados, null, 2)
+        fs.writeFileSync(
+            "dados.json", objeto
+            
+        );
+
+        console.log("Dados salvos")
     }
 
     pausar() {
@@ -32,105 +54,105 @@ class Sistema {
 
     // COMPANHIAS
     cadastrarCompanhia(nome) {
-        const Companhia = new Companhia(nome)
-        this.companhias.push(this.companhias)
-        console.log(`\nCompanhia "${nome}" cadastrada com Id ${this.nextCompanhiaId - 1}.`);
-        this.nextCompanhiaId++
-
+        const novaCompanhia = new Companhia(nome);
+        this.companhias.push(novaCompanhia);
+        console.log("\nCompanhia cadastrada com sucesso!");
     }
-    listarCompanhias(){
+
+    listarCompanhias() {
+        console.log("\n======= ✈️  COMPANHIAS =======");
         if (this.companhias.length === 0) {
-            console.log("\nNenhuma companhia cadastrada");
-            return
+            console.log("\nNenhuma companhia cadastrada.");
+        } else {
+            this.companhias.forEach((companhia, index) => {
+                console.log(`[${index}] ${companhia.nome}`);
+            });
         }
-        this.companhias.forEach((c,i) => console.log(`[${i}] ${c.nome}`));
     }
-    editarCompanhia(id, novoNome){
-        if (!this.companhias[id]) {
-            console.log("Companhia não encontrada.");
-            return;
-        } 
-        this.companhias[id].nome = novoNome
-        console.log(`companhia renomeada para ${novoNome}`)
 
-    }
-    excluirCompanhia(id){
-        const index = id - 1;
-        if (!this.companhias[index]) {
-            console.log("\nCompanhia não encontrada.");
-            return
+    editarCompanhia(id, novoNome) {
+        if (this.companhias[id]) {
+            this.companhias[id].nome = novoNome;
+            console.log("\nCompanhia atualizada com sucesso!");
+        } else {
+            console.log("\nErro: Companhia não encontrada.");
         }
-        const companhia = this.companhias[index];
-        this.trechos = this.trechos.filter (t => t.companhia !== companhia)
-        this.companhia.splice(index, 1);
-        console.log("\nCompanhia excluida.");
+    }
+
+    excluirCompanhia(id) {
+        if (this.companhias[id]) {
+            this.companhias.splice(id, 1);
+            console.log("\nCompanhia removida com sucesso!");
+        } else {
+            console.log("\nErro: Companhia não encontrada.");
+        }
     }
 
     // TRECHOS
-    cadastrarTrecho(idCompanhia, origem, destino, valor){
-        const companhia = this.companhias[idCompanhia - 1];
-        if (!companhia) {
-            console.log("\nCompanhia não encontrada.");
-            return;
+    cadastrarTrecho(idCompanhia, origem, destino, valor) {
+        if (this.companhias[idCompanhia]) {
+            const novoTrecho = new Trecho(this.companhias[idCompanhia].nome, origem, destino, valor);
+            this.trechos.push(novoTrecho);
+            console.log("\nTrecho cadastrado com sucesso!");
+        } else {
+            console.log("\nErro: Companhia não encontrada.");
         }
-        const trecho = new Trecho(companhia, origem, destino, valor);
-        this.trechos.push(trecho);
-        console.log(`\nTrecho ${origem} → ${destino} cadastrado com ID ${this.nextTrechoId}. `)
-        this.nextTrechoId++;
-        }
-        listarTrechos(){
-            if(this.trechos.length === 0) {
-                console.log("\nNenhum trecho Cadastrado.");
-                return;
-            }
-            console.log("\n=== Trechos ===");
-            this.trechos.forEach((t, i) =>
-            console.log(`[${i + 1}] ${t.origem} → ${t.destino} | R$${t.valor} | Companhia: ${t.Companhia.nome}`)
-        );
     }
-    listarTrechosPorCompanhia(){
-        if (this.trechos.lenght === 0){
-            console.log("\nNenhum comapanhia cadastrada.")
-            return;
-        }
-        this.companhias.forEach((c,i) => {
-            console.log(`\n[${i + 1}] ${c.nome}`);
-            if (c.trechos.lenght === 0){
-                console.log ("   Nenhum trecho")
-            } else {
-                c.trechos.forEach((t,j) =>
-            console.log(`[${j + 1}] ${t.origem} → ${destino} | ${valor}`)
-            );
-            }
-        });
-    }
-    editarTrecho(id, origem, destino, valor){ 
-        const trecho = this.trechos [id - 1];
-        if (!trecho) {
-            console.log("\nTrecho não encontrado.");
-            return
-        }
-        trecho.origem = origem
-        trecho.destino = destino
-        trecho.valor = valor
-        console.log (`\nTrecho atualizado: ${origem}`)
 
+    listarTrechos() {
+        console.log("\n======= 🗺️  TRECHOS =======");
+        if (this.trechos.length === 0) {
+            console.log("\nNenhum trecho cadastrado.");
+        } else {
+            this.trechos.forEach((trecho, index) => {
+                console.log(`\n[${index}] ${trecho.origem} → ${trecho.destino}`);
+                console.log(`   ✈️  Companhia: ${trecho.companhia}`);
+                console.log(`   💰 Valor: R$ ${trecho.valor.toFixed(2)}`);
+                console.log("-------------------------------------------");
+            });
+        }
     }
-    excluirTrecho(id) { 
-        const index = id - 1;
-        if (!this.trechos[index]) {
-            comsole.log("\nTrecho não encontrado");
-            return;
-        } 
-        const trecho = this.trechos[index];
-        trecho.companhia.trechos = trecho.companhia.trechos.filter(t => t !== trecho);
-        this.trechos.splice(index, 1);
-        console.log("\nTrecho excluido")
 
+    listarTrechosPorCompanhia() {
+        console.log("\n======= ✈️  TRECHOS POR COMPANHIA =======");
+        if (this.companhias.length === 0) {
+            console.log("\nNenhuma companhia cadastrada.");
+        } else {
+            this.companhias.forEach((companhia) => {
+                console.log(`\n📌 ${companhia.nome.toUpperCase()}`);
+                const trechosDaCompanhia = this.trechos.filter(trecho => trecho.companhia === companhia.nome);
+                if (trechosDaCompanhia.length === 0) {
+                    console.log("   Nenhum trecho cadastrado para essa companhia.");
+                } else {
+                    trechosDaCompanhia.forEach((trecho, index) => {
+                        console.log(`   [${index}] ${trecho.origem} → ${trecho.destino} | R$ ${trecho.valor.toFixed(2)}`);
+                    });
+                }
+                console.log("-------------------------------------------");
+            });
+        }
+    }
+
+    editarTrecho(id, origem, destino, valor) {
+        if (this.trechos[id]) {
+            this.trechos[id].origem = origem;
+            this.trechos[id].destino = destino;
+            this.trechos[id].valor = valor;
+            console.log("\nTrecho atualizado com sucesso!");
+        } else {
+            console.log("\nErro: Trecho não encontrado.");
+        }
+    }
+
+    excluirTrecho(id) {
+        if (this.trechos[id]) {
+            this.trechos.splice(id, 1);
+            console.log("\nTrecho removido com sucesso!");
+        } else {
+            console.log("\nErro: Trecho não encontrado.");
+        }
     }
 }
-
-// -------------------------------------------
 
 const sistema = new Sistema();
 let opcao = -1;
@@ -245,7 +267,8 @@ while (opcao !== 0) {
             break;
 
         default:
-            console.log("\n⚠️ Opção inválida! Tente novamente.");
+            console.log("\n⚠️.++ Opção inválida! Tente novamente.");
             sistema.pausar();
             break;
-    }}
+    }
+}
