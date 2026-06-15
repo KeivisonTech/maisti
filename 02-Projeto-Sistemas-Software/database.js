@@ -1,6 +1,9 @@
 const Database = require('better-sqlite3');
+const path = require('path');
 
-const db = new Database('sistema_passagens.db');
+// CORREÇÃO: Garante que o banco seja criado/lido sempre na mesma pasta do arquivo database.js
+const dbPath = path.resolve(__dirname, 'sistema_passagens.db');
+const db = new Database(dbPath);
 
 db.pragma('foreign_keys = ON');
 
@@ -16,8 +19,8 @@ db.exec(`
         idCompanhia INTEGER NOT NULL,
         origem TEXT NOT NULL,
         destino TEXT NOT NULL,
-        valor REAL,
-        numeroPassagens INTEGER,
+        valor REAL NOT NULL,
+        numeroPassagens INTEGER NOT NULL,
         FOREIGN KEY (idCompanhia) REFERENCES Companhia(id) ON DELETE CASCADE
     );
 
@@ -25,6 +28,7 @@ db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         idCompanhia INTEGER NOT NULL,
         codigo TEXT NOT NULL,
+        percentualDesconto REAL NOT NULL,
         numeroCupons INTEGER NOT NULL,
         FOREIGN KEY (idCompanhia) REFERENCES Companhia(id) ON DELETE CASCADE
     );
