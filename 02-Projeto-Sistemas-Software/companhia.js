@@ -6,50 +6,51 @@ const db = require('./database');
 // -------------------------------------------
 
 function pausar() {
-    console.log("\n-------------------------------------------");
-    prompt("Pressione ENTER para continuar...");
+    console.log('\n-------------------------------------------');
+    prompt('Pressione ENTER para continuar...');
     console.clear();
 }
 
+// Exibe todas as companhias cadastradas e retorna a lista
 function listarCompanhias() {
-    const SQLlistar = "SELECT * FROM Companhia";
-    const companhias = db.prepare(SQLlistar).all();
+    const companhias = db.prepare('SELECT * FROM Companhia').all();
 
     if (companhias.length === 0) {
         console.log('\nNenhuma companhia cadastrada.');
     } else {
-        console.log('\n---- COMPANHIAS ----');
-        companhias.forEach(c => {
-            console.log(`[${c.id}] ${c.nome} - Fundada em ${c.anoFundacao}`);
-        });
+        console.log('\n======= COMPANHIAS =======');
+        for (let i = 0; i < companhias.length; i++) {
+            console.log(`[${companhias[i].id}] ${companhias[i].nome} - Fundada em ${companhias[i].anoFundacao}`);
+        }
     }
 
     return companhias;
 }
 
+// Verifica se uma companhia com o id informado existe.
+// Caso nao exista, oferece a opcao de cadastrar uma nova e retorna o id gerado.
+// Retorna o id valido ou null se o usuario optar por nao cadastrar.
 function validarOuCadastrarCompanhia(idInformado) {
-    const SQLbuscar = "SELECT * FROM Companhia WHERE id = ?";
-    const companhia = db.prepare(SQLbuscar).get(idInformado);
+    const companhia = db.prepare('SELECT * FROM Companhia WHERE id = ?').get(idInformado);
 
     if (companhia) {
         return companhia.id;
     }
 
-    console.log('\nCompanhia nao encontrada.');
-    const resposta = prompt('Deseja cadastrar uma nova companhia? (s/n): ');
+    console.log('\nNenhuma companhia encontrada com esse ID.');
+    const opcaoCadastro = prompt('Deseja cadastrar uma nova companhia? (s/n): ');
 
-    if (resposta.toLowerCase() === 's') {
-        const nome = prompt('Nome da companhia: ');
-        const anoFundacao = parseInt(prompt('Ano de fundacao: '));
-
-        const SQLinserir = "INSERT INTO Companhia (nome, anoFundacao) VALUES (?, ?)";
-        const resultado = db.prepare(SQLinserir).run(nome, anoFundacao);
-
-        console.log('\nCompanhia cadastrada com sucesso!');
-        return resultado.lastInsertRowid;
+    if (opcaoCadastro.toLowerCase() !== 's') {
+        return null;
     }
 
-    return null;
+    const nomeCompanhia = prompt('Nome da companhia: ');
+    const anoFundacao = parseInt(prompt('Ano de fundacao: '));
+
+    const resultado = db.prepare('INSERT INTO Companhia (nome, anoFundacao) VALUES (?, ?)').run(nomeCompanhia, anoFundacao);
+    console.log('\nCompanhia cadastrada com sucesso!');
+
+    return resultado.lastInsertRowid;
 }
 
 // -------------------------------------------
@@ -58,82 +59,80 @@ function validarOuCadastrarCompanhia(idInformado) {
 
 function cadastrarTrecho() {
     listarCompanhias();
-    const idCompanhia = parseInt(prompt('\nInforme o ID da companhia: '));
+    const idCompanhia = parseInt(prompt('\nID da companhia responsavel pelo trecho: '));
     const idValido = validarOuCadastrarCompanhia(idCompanhia);
 
-    if (!idValido) {
-        console.log('\nOperacao cancelada.');
+    if (idValido === null) {
         return;
     }
 
-    const origem = prompt('Origem: ');
-    const destino = prompt('Destino: ');
-    const valor = parseFloat(prompt('Valor: '));
-    const numeroPassagens = parseInt(prompt('Numero de passagens: '));
+    const origem = prompt('Cidade de origem: ');
+    const destino = prompt('Cidade de destino: ');
+    const valor = parseFloat(prompt('Valor do trecho: R$ '));
+    const numeroPassagens = parseInt(prompt('Numero de passagens disponiveis: '));
 
-    const SQLinserir = "INSERT INTO Trecho (idCompanhia, origem, destino, valor, numeroPassagens) VALUES (?, ?, ?, ?, ?)";
-    db.prepare(SQLinserir).run(idValido, origem, destino, valor, numeroPassagens);
+    db.prepare('INSERT INTO Trecho (idCompanhia, origem, destino, valor, numeroPassagens) VALUES (?, ?, ?, ?, ?)')
+        .run(idValido, origem, destino, valor, numeroPassagens);
 
     console.log('\nTrecho cadastrado com sucesso!');
 }
 
 function listarTrechos() {
-    const SQLlistar = `
-        SELECT Trecho.*, Companhia.nome AS nomeCompanhia 
-        FROM Trecho 
+    const trechos = db.prepare(`
+        SELECT Trecho.*, Companhia.nome AS nomeCompanhia
+        FROM Trecho
         JOIN Companhia ON Trecho.idCompanhia = Companhia.id
-    `;
-    const trechos = db.prepare(SQLlistar).all();
+    `).all();
 
     if (trechos.length === 0) {
         console.log('\nNenhum trecho cadastrado.');
-    } else {
-        console.log('\n---- TRECHOS ----');
-        trechos.forEach(t => {
-            console.log(`[${t.id}] ${t.origem} -> ${t.destino} | R$ ${t.valor} | ${t.numeroPassagens} passagens | Companhia: ${t.nomeCompanhia}`);
-        });
+        return;
+    }
+
+    console.log('\n======= TRECHOS =======');
+    for (let i = 0; i < trechos.length; i++) {
+        const trecho = trechos[i];
+        console.log(`\n[${trecho.id}] ${trecho.origem} -> ${trecho.destino}`);
+        console.log(`   Companhia: ${trecho.nomeCompanhia}`);
+        console.log(`   Valor: R$ ${trecho.valor.toFixed(2)}`);
+        console.log(`   Passagens disponiveis: ${trecho.numeroPassagens}`);
+        console.log('-------------------------------------------');
     }
 }
 
 function editarTrecho() {
     listarTrechos();
-    const id = parseInt(prompt('\nInforme o ID do trecho a editar: '));
-
-    const SQLbuscar = "SELECT * FROM Trecho WHERE id = ?";
-    const trecho = db.prepare(SQLbuscar).get(id);
+    const idTrecho = parseInt(prompt('\nID do trecho para editar: '));
+    const trecho = db.prepare('SELECT * FROM Trecho WHERE id = ?').get(idTrecho);
 
     if (!trecho) {
-        console.log('\nTrecho nao encontrado.');
+        console.log('\nErro: Trecho nao encontrado.');
         return;
     }
 
-    const origem = prompt(`Origem (${trecho.origem}): `) || trecho.origem;
-    const destino = prompt(`Destino (${trecho.destino}): `) || trecho.destino;
-    const valor = parseFloat(prompt(`Valor (${trecho.valor}): `)) || trecho.valor;
-    const numeroPassagens = parseInt(prompt(`Numero de passagens (${trecho.numeroPassagens}): `)) || trecho.numeroPassagens;
+    const novaOrigem = prompt('Nova origem: ');
+    const novoDestino = prompt('Novo destino: ');
+    const novoValor = parseFloat(prompt('Novo valor: R$ '));
+    const novoNumeroPassagens = parseInt(prompt('Novo numero de passagens: '));
 
-    const SQLatualizar = "UPDATE Trecho SET origem = ?, destino = ?, valor = ?, numeroPassagens = ? WHERE id = ?";
-    db.prepare(SQLatualizar).run(origem, destino, valor, numeroPassagens, id);
+    db.prepare('UPDATE Trecho SET origem = ?, destino = ?, valor = ?, numeroPassagens = ? WHERE id = ?')
+        .run(novaOrigem, novoDestino, novoValor, novoNumeroPassagens, idTrecho);
 
     console.log('\nTrecho atualizado com sucesso!');
 }
 
 function excluirTrecho() {
     listarTrechos();
-    const id = parseInt(prompt('\nInforme o ID do trecho a excluir: '));
-
-    const SQLbuscar = "SELECT * FROM Trecho WHERE id = ?";
-    const trecho = db.prepare(SQLbuscar).get(id);
+    const idTrecho = parseInt(prompt('\nID do trecho para excluir: '));
+    const trecho = db.prepare('SELECT * FROM Trecho WHERE id = ?').get(idTrecho);
 
     if (!trecho) {
-        console.log('\nTrecho nao encontrado.');
+        console.log('\nErro: Trecho nao encontrado.');
         return;
     }
 
-    const SQLexcluir = "DELETE FROM Trecho WHERE id = ?";
-    db.prepare(SQLexcluir).run(id);
-
-    console.log('\nTrecho excluido com sucesso!');
+    db.prepare('DELETE FROM Trecho WHERE id = ?').run(idTrecho);
+    console.log('\nTrecho removido com sucesso!');
 }
 
 // -------------------------------------------
@@ -142,80 +141,78 @@ function excluirTrecho() {
 
 function cadastrarCupom() {
     listarCompanhias();
-    const idCompanhia = parseInt(prompt('\nInforme o ID da companhia: '));
+    const idCompanhia = parseInt(prompt('\nID da companhia responsavel pelo cupom: '));
     const idValido = validarOuCadastrarCompanhia(idCompanhia);
 
-    if (!idValido) {
-        console.log('\nOperacao cancelada.');
+    if (idValido === null) {
         return;
     }
 
-    const codigo = prompt('Codigo do cupom: ');
-    const percentualDesconto = parseFloat(prompt('Percentual de desconto: '));
-    const numeroCupons = parseInt(prompt('Numero de cupons: '));
+    const codigo = prompt('Codigo do cupom (ex.: VIAGEM10): ').toUpperCase();
+    const percentualDesconto = parseFloat(prompt('Percentual de desconto (ex.: 10 para 10%): '));
+    const numeroCupons = parseInt(prompt('Numero de cupons disponiveis: '));
 
-    const SQLinserir = "INSERT INTO Cupom (idCompanhia, codigo, percentualDesconto, numeroCupons) VALUES (?, ?, ?, ?)";
-    db.prepare(SQLinserir).run(idValido, codigo, percentualDesconto, numeroCupons);
+    db.prepare('INSERT INTO Cupom (idCompanhia, codigo, percentualDesconto, numeroCupons) VALUES (?, ?, ?, ?)')
+        .run(idValido, codigo, percentualDesconto, numeroCupons);
 
     console.log('\nCupom cadastrado com sucesso!');
 }
 
 function listarCupons() {
-    const SQLlistar = `
-        SELECT Cupom.*, Companhia.nome AS nomeCompanhia 
-        FROM Cupom 
+    const cupons = db.prepare(`
+        SELECT Cupom.*, Companhia.nome AS nomeCompanhia
+        FROM Cupom
         JOIN Companhia ON Cupom.idCompanhia = Companhia.id
-    `;
-    const cupons = db.prepare(SQLlistar).all();
+    `).all();
 
     if (cupons.length === 0) {
         console.log('\nNenhum cupom cadastrado.');
-    } else {
-        console.log('\n---- CUPONS ----');
-        cupons.forEach(c => {
-            console.log(`[${c.id}] Codigo: ${c.codigo} | Desconto: ${c.percentualDesconto}% | ${c.numeroCupons} cupons | Companhia: ${c.nomeCompanhia}`);
-        });
+        return;
+    }
+
+    console.log('\n======= CUPONS =======');
+    for (let i = 0; i < cupons.length; i++) {
+        const cupom = cupons[i];
+        console.log(`\n[${cupom.id}] Codigo: ${cupom.codigo}`);
+        console.log(`   Companhia: ${cupom.nomeCompanhia}`);
+        console.log(`   Desconto: ${cupom.percentualDesconto}%`);
+        console.log(`   Cupons disponiveis: ${cupom.numeroCupons}`);
+        console.log('-------------------------------------------');
     }
 }
 
 function editarCupom() {
     listarCupons();
-    const id = parseInt(prompt('\nInforme o ID do cupom a editar: '));
-
-    const SQLbuscar = "SELECT * FROM Cupom WHERE id = ?";
-    const cupom = db.prepare(SQLbuscar).get(id);
+    const codigoCupom = prompt('\nCodigo do cupom para editar: ').toUpperCase();
+    const cupom = db.prepare('SELECT * FROM Cupom WHERE codigo = ?').get(codigoCupom);
 
     if (!cupom) {
-        console.log('\nCupom nao encontrado.');
+        console.log('\nErro: Cupom nao encontrado.');
         return;
     }
 
-    const codigo = prompt(`Codigo (${cupom.codigo}): `) || cupom.codigo;
-    const percentualDesconto = parseFloat(prompt(`Percentual de desconto (${cupom.percentualDesconto}): `)) || cupom.percentualDesconto;
-    const numeroCupons = parseInt(prompt(`Numero de cupons (${cupom.numeroCupons}): `)) || cupom.numeroCupons;
+    const novoCodigo = prompt('Novo codigo: ').toUpperCase();
+    const novoPercentual = parseFloat(prompt('Novo percentual de desconto: '));
+    const novoNumeroCupons = parseInt(prompt('Novo numero de cupons disponiveis: '));
 
-    const SQLatualizar = "UPDATE Cupom SET codigo = ?, percentualDesconto = ?, numeroCupons = ? WHERE id = ?";
-    db.prepare(SQLatualizar).run(codigo, percentualDesconto, numeroCupons, id);
+    db.prepare('UPDATE Cupom SET codigo = ?, percentualDesconto = ?, numeroCupons = ? WHERE id = ?')
+        .run(novoCodigo, novoPercentual, novoNumeroCupons, cupom.id);
 
     console.log('\nCupom atualizado com sucesso!');
 }
 
 function excluirCupom() {
     listarCupons();
-    const id = parseInt(prompt('\nInforme o ID do cupom a excluir: '));
-
-    const SQLbuscar = "SELECT * FROM Cupom WHERE id = ?";
-    const cupom = db.prepare(SQLbuscar).get(id);
+    const codigoCupom = prompt('\nCodigo do cupom para excluir: ').toUpperCase();
+    const cupom = db.prepare('SELECT * FROM Cupom WHERE codigo = ?').get(codigoCupom);
 
     if (!cupom) {
-        console.log('\nCupom nao encontrado.');
+        console.log('\nErro: Cupom nao encontrado.');
         return;
     }
 
-    const SQLexcluir = "DELETE FROM Cupom WHERE id = ?";
-    db.prepare(SQLexcluir).run(id);
-
-    console.log('\nCupom excluido com sucesso!');
+    db.prepare('DELETE FROM Cupom WHERE id = ?').run(cupom.id);
+    console.log('\nCupom removido com sucesso!');
 }
 
 // -------------------------------------------
@@ -239,6 +236,7 @@ while (opcao !== 0) {
     opcao = parseInt(prompt('Escolha uma opcao: '));
 
     switch (opcao) {
+
         case 1:
             console.log('\n---- TRECHOS ----');
             console.log('1 - Cadastrar');
