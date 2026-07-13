@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Esquina do Sabor - Início</title>
+</head>
+<body>
+  <h1>Esquina do Sabor</h1>
+  <nav>
+    <a href="#index.html">Início</a> |
+    <a href="cardapio.html">Cardápio</a> |
+    <a href="pedido.html">Meu Pedido</a> |
+    <a href="pagamento.html">Pagamento</a>
+  <hr>
+   </nav>
+  <h2>Bem-vindo!</h2>
+  <p>Peça já seu lanche:Pastel de Queijo, Caldo de Cana e Coxinha de Frango.</p>
+  <h4><button><a href="cardapio.html">Fazer pedido</a></button></h4>
+
+  <style>
+    /* ==========================================================================
+   1. CONFIGURAÇÕES GERAIS E PALETA DE CORES (VARIÁVEIS)
+   ========================================================================== */
+:root {
+    --primary-color: #d67d33;       /* Âmbar / Terracota Aquecido */
+    --primary-hover: #b8621d;       /* Tom mais escuro para hover */
+    --accent-color: #2b7a4b;        /* Verde suave para sucesso/finalização */
+    --accent-hover: #1e5633;
+    --bg-main: #fcf9f5;             /* Fundo creme confortável */
+    --bg-card: #ffffff;             /* Fundo dos cartões em branco puro */
+    --text-main: #2e241c;           /* Texto escuro com subtom marrom */
+    --text-muted: #7c6e65;          /* Texto secundário */
+    --border-color: #eaddd3;        /* Linhas divisórias suaves */
+    --shadow: 0 4px 12px rgba(46, 36, 28, 0.06); /* Sombra leve e elegante */
+    --radius: 12px;                 /* Bordas arredondadas modernas */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Container que envelopa o conteúdo de cada página */
+main, .container {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--bg-card);
+    padding: 30px 24px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+/* ==========================================================================
+   2. CABEÇALHO E MENU DE NAVEGAÇÃO
+   ========================================================================== */
+h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* Barra de Navegação: Início | Cardápio | Meu Pedido | Pagamento */
+nav, .navigation {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-color);
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+nav a, .navigation a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 600;
+    transition: color 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+nav a:hover, .navigation a:hover {
+    color: var(--primary-color);
+    background-color: rgba(214, 125, 51, 0.08);
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: var(--text-main);
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+}
+
+/* ==========================================================================
+   3. ESTILIZAÇÃO DOS BOTÕES
+   ========================================================================== */
+button, .btn, a.btn-link {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-decoration: none;
+    margin-top: 15px;
+}
+
+button:hover, .btn:hover {
+    background-color: var(--primary-hover);
+}
+
+button:active, .btn:active {
+    transform: scale(0.98);
+}
+
+/* Botão de Finalizar (Verde) */
+button.finalizar, .btn-success {
+    background-color: var(--accent-color);
+}
+
+button.finalizar:hover, .btn-success:hover {
+    background-color: var(--accent-hover);
+}
+
+/* ==========================================================================
+   4. PÁGINA: INÍCIO
+   ========================================================================== */
+.welcome-box {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.welcome-box p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   5. PÁGINA: CARDÁPIO (Seleção de Quantidades)
+   ========================================================================== */
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--border-color); /* Efeito clássico de canhoto */
+}
+
+.menu-item:last-of-type {
+    border-bottom: none;
+}
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.item-price {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Estilização dos inputs numéricos de quantidade */
+.quantity-input {
+    width: 60px;
+    padding: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.quantity-input:focus {
+    border-color: var(--primary-color);
+}
+
+/* ==========================================================================
+   6. PÁGINA: MEU PEDIDO
+   ========================================================================== */
+.empty-cart {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.total-box {
+    margin-top: 25px;
+    padding: 15px;
+    background-color: rgba(214, 125, 51, 0.05);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    border: 1px solid rgba(214, 125, 51, 0.1);
+}
+
+.confirmation-text {
+    margin-top: 15px;
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   7. PÁGINA: PAGAMENTO (Opções e Checkboxes)
+   ========================================================================== */
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    padding: 14px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 600;
+}
+
+.payment-method:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(214, 125, 51, 0.02);
+}
+
+/* Simula a seleção ativa caso aplique classe via JS */
+.payment-method.active {
+    border-color: var(--primary-color);
+    background-color: rgba(214, 125, 51, 0.05);
+}
+
+.payment-method input[type="radio"],
+.payment-method input[type="checkbox"] {
+    margin-right: 12px;
+    accent-color: var(--primary-color); /* Muda a cor nativa do check/radio */
+    width: 18px;
+    height: 18px;
+}
+
+  </style>
+</body>
+
+</html>

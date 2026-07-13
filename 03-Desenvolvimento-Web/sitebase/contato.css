@@ -1,0 +1,170 @@
+/* 5. Propriedades CSS e Modelo de Caixa (Box Model) */
+			body {
+				/* Nova combinação de fontes modernas */
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background-color: #eef2f3; /* Fundo cinza bem claro/azuloso */
+				margin: 10;
+				color: #333333;
+			}
+
+			/* Cabeçalho com nova cor (Azul Petróleo Escuro) */
+			header {
+				background-color: #2c3e50;
+				color: white;
+				text-align: center;
+				padding-top: 15px; /* Mais espaçamento interno */
+        padding-bottom: 10px;
+			}
+      header h1 {
+        font-family: 'Times New Roman', Times, serif
+      }
+      nav {
+        border-top: 1px solid #eef2f3;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+      }
+
+      nav a{
+        color: #e67e22;
+        padding: 20px;
+        font-weight: bolder;
+        font-size: large;
+      }
+
+			/* Bloco principal centralizado com novas proporções */
+			main {
+				width: 850px; /* Largura um pouco menor que o anterior */
+				margin: 25px auto; /* Margem de 25px acima/abaixo e centralizado nas laterais */
+				background-color: white;
+				padding: 25px;
+				border-radius: 12px; /* Cantos ainda mais arredondados e modernos */
+			}
+
+			form textarea {
+    width: 300px;            
+    max-width: 600px;        
+    margin: 40px auto;       
+    padding: 30px;           
+    height: auto;            
+    box-sizing: border-box;  
+}
+    div{
+		height: max-content;
+	}
+
+            
+
+			/* Rodapé combinando com o cabeçalho */
+			footer {
+				background-color: #2c3e50;
+				color: white;
+				text-align: center;
+				padding: 20px;
+			}
+
+			/* Estilização dos Links - Nova cor (Laranja/Abóbora) */
+			a {
+				color: #e67e22;
+				font-weight: bold;
+				text-decoration: none; /* Remove o sublinhado padrão */
+			}
+
+			/* 4. Pseudo-classe Hover (Efeito ao passar o mouse) */
+			a:hover {
+				text-decoration: underline; /* O sublinhado aparece apenas no foco */
+				color: #d35400; /* Muda para um tom de laranja mais escuro */
+			}
+			/* Centraliza e define o tamanho do formulário */
+form {
+    width: 100%;
+    max-width: 550px; /* Define a largura máxima ideal */
+    margin: 40px auto; /* Centraliza o formulário na página */
+    padding: 30px; /* Aumenta o espaço interno da caixa */
+    background-color: #fcf9f5; /* Tom suave de café/creme */
+    border: 1px solid #e1d7cd; 
+    border-radius: 12px; /* Deixa as bordas arredondadas */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Sombra leve elegante */
+    box-sizing: border-box;
+}
+
+/* Organiza o espaço de cada bloco (Label + Campo) */
+.campo {
+    margin-bottom: 20px; /* Afasta um campo do outro verticalmente */
+    display: flex;
+    flex-direction: column; /* Coloca o Label acima do Input */
+}
+
+/* Deixa os textos das etiquetas maiores e destacados */
+.campo label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4a3b32; /* Cor marrom café escuro */
+    margin-bottom: 8px; /* Afasta o texto do campo de digitação */
+}
+
+/* Aumenta o tamanho dos inputs e da área de descrição */
+.campo input, 
+.campo textarea {
+    width: 100%; /* Faz ocupar toda a largura do formulário */
+    padding: 12px 15px; /* Aumenta o espaço interno (respiro do texto) */
+    font-size: 16px; /* Letras maiores ao digitar */
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Cantos levemente arredondados nos campos */
+    box-sizing: border-box; /* Garante que o padding não quebre o layout */
+    background-color: #fff;
+}
+
+/* Destaque visual quando o usuário clica no campo */
+.campo input:focus, 
+.campo textarea:focus {
+    border-color: #6f4e37; /* Muda a borda para cor de café ao focar */
+    outline: none; /* Remove a borda padrão azul do navegador */
+}
+
+/* Configuração específica do campo de descrição */
+.campo textarea {
+    height: 120px; /* Define uma altura confortável para o texto longo */
+    resize: vertical; /* Permite esticar apenas para baixo */
+}
+
+/* Organização e aumento dos botões */
+.botoes {
+    display: flex;
+    gap: 15px; /* Dá um espaço de separação entre os dois botões */
+    margin-top: 10px;
+}
+
+.botoes input {
+    flex: 1; /* Faz os dois botões terem exatamente o mesmo tamanho */
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer; /* Transforma a seta do mouse em mãozinha */
+    transition: background-color 0.2s; /* Transição suave de cor */
+}
+
+/* Estilo do botão Enviar */
+.botoes input[name="enviar"] {
+    background-color: #6f4e37; /* Cor marrom café */
+    color: white;
+}
+
+.botoes input[name="enviar"]:hover {
+    background-color: #4a3b32; /* Escurece o café ao passar o mouse */
+}
+
+/* Estilo do botão Redefinir */
+.botoes input[type="reset"] {
+    background-color: #e1d7cd;
+    color: #4a3b32;
+}
+
+.botoes input[type="reset"]:hover {
+    background-color: #cbbdaf;
+}

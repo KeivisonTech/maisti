@@ -1,0 +1,91 @@
+header {
+    background-color: rgba(34, 56, 81, 0.930);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    text-align: center;
+    height: 132.3px;
+    padding: 1px; 
+    color: aliceblue;
+}
+
+main img {
+   display: block;
+   margin: 0 auto;
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Animação de zoom e sombra na imagem ao passar o mouse */
+main img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+main {
+    text-align: left;
+    max-width: 1100px;
+    width: 50%;         
+    margin: 40px auto;   
+    padding: 30px;      
+    background-color: #fcfbf4;
+    zoom: 70%;
+    
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;                  
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.05); 
+    
+    box-sizing: border-box;
+    
+    /* Aplica a animação de surgimento suave no conteúdo principal */
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+footer {
+    background-color: rgba(34, 56, 81, 0.930);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 20px; 
+    color: aliceblue;
+}
+
+fieldset {
+    background-color: #fcfbf4;
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+}
+
+nav{
+    border-top: 1px solid #eef2f3;
+}
+nav ul{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px ;
+}
+
+nav a{
+    color: azure;
+    padding: 20px;
+    font-weight: bolder;
+    font-size: large;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Animação nos links do menu ao passar o mouse */
+nav a:hover {
+    color: #ffeb3b; 
+    transform: translateY(3px);
+}
+
+/* Configuração da animação de surgimento (Fade In de baixo para cima) */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
